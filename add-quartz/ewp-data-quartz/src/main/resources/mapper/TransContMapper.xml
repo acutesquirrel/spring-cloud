@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ewp.data.persistence.TransContMapper" >
+  <resultMap id="BaseResultMap" type="com.ewp.data.domain.TransCont" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR" />
+    <result column="PROPOSAL_NO" property="proposalNo" jdbcType="VARCHAR" />
+    <result column="CONT_NO" property="contNo" jdbcType="VARCHAR" />
+    <result column="CONT_TYPE" property="contType" jdbcType="VARCHAR" />
+    <result column="SIGN_DATE" property="signDate" jdbcType="TIMESTAMP" />
+    <result column="CVALI_DATE" property="cvaliDate" jdbcType="TIMESTAMP" />
+    <result column="TOTAL_PREM" property="totalPrem" jdbcType="DECIMAL" />
+    <result column="TOTAL_AMNT" property="totalAmnt" jdbcType="DECIMAL" />
+    <result column="SUM_MULT" property="sumMult" jdbcType="VARCHAR" />
+    <result column="CONT_STATE" property="contState" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="MODIFY_DATE" property="modifyDate" jdbcType="TIMESTAMP" />
+    <result column="CREATE_USER_ID" property="createUserId" jdbcType="BIGINT" />
+    <result column="MODIFY_USER_ID" property="modifyUserId" jdbcType="BIGINT" />
+    <result column="RC_STATE" property="rcState" jdbcType="VARCHAR" />
+    <result column="FIELD_AE" property="fieldAE" jdbcType="VARCHAR" />
+    <result column="EIP_URL" property="eipUrl" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, ORDER_NO, PROPOSAL_NO, CONT_NO, CONT_TYPE, SIGN_DATE, CVALI_DATE, TOTAL_PREM, 
+    TOTAL_AMNT, SUM_MULT, CONT_STATE, CREATE_DATE, MODIFY_DATE, CREATE_USER_ID, MODIFY_USER_ID, 
+    RC_STATE,FIELD_AE,FIELD_AE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from EWP_TRANS_CONT
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+  
+  	<!-- 查询保单信息 -->
+	<select id="selectContMsg" resultType="com.ewp.data.model.response.ReportMail">
+		SELECT
+			count(e.CONT_NO) AS contNum,
+			SUM(e.TOTAL_PREM) AS totalPrem
+		FROM
+			EWP_TRANS_CONT e
+		WHERE
+			e.CONT_STATE = '5'
+		AND e.CONT_NO IS NOT NULL
+		AND DATEDIFF(e.CREATE_DATE, NOW()) BETWEEN #{yNum} AND #{tNum};
+	</select>
+	
+	<select id="selectByOrderNo" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from EWP_TRANS_CONT
+   where ORDER_NO = #{orderNo}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from EWP_TRANS_CONT
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ewp.data.domain.TransCont" >
+    insert into EWP_TRANS_CONT (ID, ORDER_NO, PROPOSAL_NO, 
+      CONT_NO, CONT_TYPE, SIGN_DATE, 
+      CVALI_DATE, TOTAL_PREM, TOTAL_AMNT, 
+      SUM_MULT, CONT_STATE, CREATE_DATE, 
+      MODIFY_DATE, CREATE_USER_ID, MODIFY_USER_ID, 
+      RC_STATE, ORDER_NO, FIELD_AE, EIP_URL)
+    values (#{id,jdbcType=BIGINT}, #{orderNo,jdbcType=VARCHAR}, #{proposalNo,jdbcType=VARCHAR}, 
+      #{contNo,jdbcType=VARCHAR}, #{contType,jdbcType=VARCHAR}, #{signDate,jdbcType=TIMESTAMP}, 
+      #{cvaliDate,jdbcType=TIMESTAMP}, #{totalPrem,jdbcType=DECIMAL}, #{totalAmnt,jdbcType=DECIMAL}, 
+      #{sumMult,jdbcType=VARCHAR}, #{contState,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{modifyDate,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=BIGINT}, #{modifyUserId,jdbcType=BIGINT}, 
+      #{rcState,jdbcType=VARCHAR}, #{fieldAE,jdbcType=VARCHAR}, #{eipUrl,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ewp.data.domain.TransCont" >
+    insert into EWP_TRANS_CONT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="orderNo != null" >
+        ORDER_NO,
+      </if>
+      <if test="proposalNo != null" >
+        PROPOSAL_NO,
+      </if>
+      <if test="contNo != null" >
+        CONT_NO,
+      </if>
+      <if test="contType != null" >
+        CONT_TYPE,
+      </if>
+      <if test="signDate != null" >
+        SIGN_DATE,
+      </if>
+      <if test="cvaliDate != null" >
+        CVALI_DATE,
+      </if>
+      <if test="totalPrem != null" >
+        TOTAL_PREM,
+      </if>
+      <if test="totalAmnt != null" >
+        TOTAL_AMNT,
+      </if>
+      <if test="sumMult != null" >
+        SUM_MULT,
+      </if>
+      <if test="contState != null" >
+        CONT_STATE,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="modifyDate != null" >
+        MODIFY_DATE,
+      </if>
+      <if test="createUserId != null" >
+        CREATE_USER_ID,
+      </if>
+      <if test="modifyUserId != null" >
+        MODIFY_USER_ID,
+      </if>
+      <if test="rcState != null" >
+        RC_STATE,
+      </if>
+      <if test="fieldAE != null" >
+        FIELD_AE,
+      </if>
+      <if test="eipUrl != null" >
+        EIP_URL,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="orderNo != null" >
+        #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="proposalNo != null" >
+        #{proposalNo,jdbcType=VARCHAR},
+      </if>
+      <if test="contNo != null" >
+        #{contNo,jdbcType=VARCHAR},
+      </if>
+      <if test="contType != null" >
+        #{contType,jdbcType=VARCHAR},
+      </if>
+      <if test="signDate != null" >
+        #{signDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cvaliDate != null" >
+        #{cvaliDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="totalPrem != null" >
+        #{totalPrem,jdbcType=DECIMAL},
+      </if>
+      <if test="totalAmnt != null" >
+        #{totalAmnt,jdbcType=DECIMAL},
+      </if>
+      <if test="sumMult != null" >
+        #{sumMult,jdbcType=VARCHAR},
+      </if>
+      <if test="contState != null" >
+        #{contState,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="modifyUserId != null" >
+        #{modifyUserId,jdbcType=BIGINT},
+      </if>
+      <if test="rcState != null" >
+        #{rcState,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldAE != null" >
+        #{fieldAE,jdbcType=VARCHAR},
+      </if>
+      <if test="eipUrl != null" >
+        #{eipUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ewp.data.domain.TransCont" >
+    update EWP_TRANS_CONT
+    <set >
+      <if test="orderNo != null" >
+        ORDER_NO = #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="proposalNo != null" >
+        PROPOSAL_NO = #{proposalNo,jdbcType=VARCHAR},
+      </if>
+      <if test="contNo != null" >
+        CONT_NO = #{contNo,jdbcType=VARCHAR},
+      </if>
+      <if test="contType != null" >
+        CONT_TYPE = #{contType,jdbcType=VARCHAR},
+      </if>
+      <if test="signDate != null" >
+        SIGN_DATE = #{signDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cvaliDate != null" >
+        CVALI_DATE = #{cvaliDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="totalPrem != null" >
+        TOTAL_PREM = #{totalPrem,jdbcType=DECIMAL},
+      </if>
+      <if test="totalAmnt != null" >
+        TOTAL_AMNT = #{totalAmnt,jdbcType=DECIMAL},
+      </if>
+      <if test="sumMult != null" >
+        SUM_MULT = #{sumMult,jdbcType=VARCHAR},
+      </if>
+      <if test="contState != null" >
+        CONT_STATE = #{contState,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        MODIFY_DATE = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null" >
+        CREATE_USER_ID = #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="modifyUserId != null" >
+        MODIFY_USER_ID = #{modifyUserId,jdbcType=BIGINT},
+      </if>
+      <if test="rcState != null" >
+        RC_STATE = #{rcState,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldAE != null" >
+        FIELD_AE = #{fieldAE,jdbcType=VARCHAR},
+      </if>
+      <if test="eipUrl != null" >
+        EIP_URL = #{eipUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ewp.data.domain.TransCont" >
+    update EWP_TRANS_CONT
+    set ORDER_NO = #{orderNo,jdbcType=VARCHAR},
+      PROPOSAL_NO = #{proposalNo,jdbcType=VARCHAR},
+      CONT_NO = #{contNo,jdbcType=VARCHAR},
+      CONT_TYPE = #{contType,jdbcType=VARCHAR},
+      SIGN_DATE = #{signDate,jdbcType=TIMESTAMP},
+      CVALI_DATE = #{cvaliDate,jdbcType=TIMESTAMP},
+      TOTAL_PREM = #{totalPrem,jdbcType=DECIMAL},
+      TOTAL_AMNT = #{totalAmnt,jdbcType=DECIMAL},
+      SUM_MULT = #{sumMult,jdbcType=VARCHAR},
+      CONT_STATE = #{contState,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      MODIFY_DATE = #{modifyDate,jdbcType=TIMESTAMP},
+      CREATE_USER_ID = #{createUserId,jdbcType=BIGINT},
+      MODIFY_USER_ID = #{modifyUserId,jdbcType=BIGINT},
+      RC_STATE = #{rcState,jdbcType=VARCHAR},
+      FIELD_AE = #{fieldAE,jdbcType=VARCHAR},
+      EIP_URL = #{eipUrl,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

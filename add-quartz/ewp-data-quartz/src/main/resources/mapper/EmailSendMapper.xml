@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ewp.data.persistence.EmailSendMapper" >
+  <resultMap id="BaseResultMap" type="com.ewp.data.domain.EmailSend" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="TASKTYPE" property="tasktype" jdbcType="VARCHAR" />
+    <result column="USER_ID" property="userId" jdbcType="BIGINT" />
+    <result column="USER_PWD" property="userPwd" jdbcType="VARCHAR" />
+    <result column="THEME" property="theme" jdbcType="VARCHAR" />
+    <result column="TEMPLATE_ID" property="templateId" jdbcType="VARCHAR" />
+    <result column="SENDSTATUS" property="sendstatus" jdbcType="VARCHAR" />
+    <result column="ATTACHMENT" property="attachment" jdbcType="VARCHAR" />
+    <result column="FAIL_REASON" property="failReason" jdbcType="VARCHAR" />
+    <result column="SENDFAILURETIMES" property="sendfailuretimes" jdbcType="BIGINT" />
+    <result column="MODIFY_DATE" property="modifyDate" jdbcType="TIMESTAMP" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, TASKTYPE, USER_ID, USER_PWD, THEME, TEMPLATE_ID, SENDSTATUS, ATTACHMENT, FAIL_REASON, 
+    SENDFAILURETIMES, MODIFY_DATE, CREATE_DATE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from EWP_EMAIL_SEND
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from EWP_EMAIL_SEND
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ewp.data.domain.EmailSend" >
+    insert into EWP_EMAIL_SEND (ID, TASKTYPE, USER_ID, 
+      USER_PWD, THEME, TEMPLATE_ID, 
+      SENDSTATUS, ATTACHMENT, FAIL_REASON, 
+      SENDFAILURETIMES, MODIFY_DATE, CREATE_DATE
+      )
+    values (#{id,jdbcType=BIGINT}, #{tasktype,jdbcType=VARCHAR}, #{userId,jdbcType=BIGINT}, 
+      #{userPwd,jdbcType=VARCHAR}, #{theme,jdbcType=VARCHAR}, #{templateId,jdbcType=VARCHAR}, 
+      #{sendstatus,jdbcType=VARCHAR}, #{attachment,jdbcType=VARCHAR}, #{failReason,jdbcType=VARCHAR}, 
+      #{sendfailuretimes,jdbcType=BIGINT}, #{modifyDate,jdbcType=TIMESTAMP}, #{createDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ewp.data.domain.EmailSend" useGeneratedKeys="true" keyProperty="id" >
+    insert into EWP_EMAIL_SEND
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tasktype != null" >
+        TASKTYPE,
+      </if>
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+      <if test="userPwd != null" >
+        USER_PWD,
+      </if>
+      <if test="theme != null" >
+        THEME,
+      </if>
+      <if test="templateId != null" >
+        TEMPLATE_ID,
+      </if>
+      <if test="sendstatus != null" >
+        SENDSTATUS,
+      </if>
+      <if test="attachment != null" >
+        ATTACHMENT,
+      </if>
+      <if test="failReason != null" >
+        FAIL_REASON,
+      </if>
+      <if test="sendfailuretimes != null" >
+        SENDFAILURETIMES,
+      </if>
+      <if test="modifyDate != null" >
+        MODIFY_DATE,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tasktype != null" >
+        #{tasktype,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="userPwd != null" >
+        #{userPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="theme != null" >
+        #{theme,jdbcType=VARCHAR},
+      </if>
+      <if test="templateId != null" >
+        #{templateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sendstatus != null" >
+        #{sendstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="attachment != null" >
+        #{attachment,jdbcType=VARCHAR},
+      </if>
+      <if test="failReason != null" >
+        #{failReason,jdbcType=VARCHAR},
+      </if>
+      <if test="sendfailuretimes != null" >
+        #{sendfailuretimes,jdbcType=BIGINT},
+      </if>
+      <if test="modifyDate != null" >
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ewp.data.domain.EmailSend" >
+    update EWP_EMAIL_SEND
+    <set >
+      <if test="tasktype != null" >
+        TASKTYPE = #{tasktype,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        USER_ID = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="userPwd != null" >
+        USER_PWD = #{userPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="theme != null" >
+        THEME = #{theme,jdbcType=VARCHAR},
+      </if>
+      <if test="templateId != null" >
+        TEMPLATE_ID = #{templateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sendstatus != null" >
+        SENDSTATUS = #{sendstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="attachment != null" >
+        ATTACHMENT = #{attachment,jdbcType=VARCHAR},
+      </if>
+      <if test="failReason != null" >
+        FAIL_REASON = #{failReason,jdbcType=VARCHAR},
+      </if>
+      <if test="sendfailuretimes != null" >
+        SENDFAILURETIMES = #{sendfailuretimes,jdbcType=BIGINT},
+      </if>
+      <if test="modifyDate != null" >
+        MODIFY_DATE = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ewp.data.domain.EmailSend" >
+    update EWP_EMAIL_SEND
+    set TASKTYPE = #{tasktype,jdbcType=VARCHAR},
+      USER_ID = #{userId,jdbcType=BIGINT},
+      USER_PWD = #{userPwd,jdbcType=VARCHAR},
+      THEME = #{theme,jdbcType=VARCHAR},
+      TEMPLATE_ID = #{templateId,jdbcType=VARCHAR},
+      SENDSTATUS = #{sendstatus,jdbcType=VARCHAR},
+      ATTACHMENT = #{attachment,jdbcType=VARCHAR},
+      FAIL_REASON = #{failReason,jdbcType=VARCHAR},
+      SENDFAILURETIMES = #{sendfailuretimes,jdbcType=BIGINT},
+      MODIFY_DATE = #{modifyDate,jdbcType=TIMESTAMP},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

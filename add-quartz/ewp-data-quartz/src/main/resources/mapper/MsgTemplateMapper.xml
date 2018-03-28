@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ewp.data.persistence.MsgTemplateMapper" >
+  <resultMap id="BaseResultMap" type="com.ewp.data.domain.MsgTemplate" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="TEMPLATE_ID" property="templateId" jdbcType="VARCHAR" />
+    <result column="TEMPLATE_THEME" property="templateTheme" jdbcType="VARCHAR" />
+    <result column="TEMPLATE_CONTENT" property="templateContent" jdbcType="VARCHAR" />
+    <result column="TEMPLATE_TYPE" property="templateType" jdbcType="VARCHAR" />
+    <result column="CREATE_USER_ID" property="createUserId" jdbcType="BIGINT" />
+    <result column="MODIFY_USER_ID" property="modifyUserId" jdbcType="BIGINT" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="MODIFY_DATE" property="modifyDate" jdbcType="TIMESTAMP" />
+    <result column="RC_STATE" property="rcState" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, TEMPLATE_ID, TEMPLATE_THEME, TEMPLATE_CONTENT, TEMPLATE_TYPE, CREATE_USER_ID, 
+    MODIFY_USER_ID, CREATE_DATE, MODIFY_DATE, RC_STATE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from EWP_MSG_TEMPLATE
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectByTemplateId" resultMap="BaseResultMap" parameterType="java.lang.String">
+  	select
+  	<include refid="Base_Column_List" />
+  	from EWP_MSG_TEMPLATE 
+  	where TEMPLATE_ID = #{templateId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from EWP_MSG_TEMPLATE
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ewp.data.domain.MsgTemplate" >
+    insert into EWP_MSG_TEMPLATE (ID, TEMPLATE_ID, TEMPLATE_THEME, 
+      TEMPLATE_CONTENT, TEMPLATE_TYPE, CREATE_USER_ID, 
+      MODIFY_USER_ID, CREATE_DATE, MODIFY_DATE, 
+      RC_STATE)
+    values (#{id,jdbcType=BIGINT}, #{templateId,jdbcType=VARCHAR}, #{templateTheme,jdbcType=VARCHAR}, 
+      #{templateContent,jdbcType=VARCHAR}, #{templateType,jdbcType=VARCHAR}, #{createUserId,jdbcType=BIGINT}, 
+      #{modifyUserId,jdbcType=BIGINT}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, 
+      #{rcState,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ewp.data.domain.MsgTemplate" >
+    insert into EWP_MSG_TEMPLATE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="templateId != null" >
+        TEMPLATE_ID,
+      </if>
+      <if test="templateTheme != null" >
+        TEMPLATE_THEME,
+      </if>
+      <if test="templateContent != null" >
+        TEMPLATE_CONTENT,
+      </if>
+      <if test="templateType != null" >
+        TEMPLATE_TYPE,
+      </if>
+      <if test="createUserId != null" >
+        CREATE_USER_ID,
+      </if>
+      <if test="modifyUserId != null" >
+        MODIFY_USER_ID,
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE,
+      </if>
+      <if test="modifyDate != null" >
+        MODIFY_DATE,
+      </if>
+      <if test="rcState != null" >
+        RC_STATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="templateId != null" >
+        #{templateId,jdbcType=VARCHAR},
+      </if>
+      <if test="templateTheme != null" >
+        #{templateTheme,jdbcType=VARCHAR},
+      </if>
+      <if test="templateContent != null" >
+        #{templateContent,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType != null" >
+        #{templateType,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="modifyUserId != null" >
+        #{modifyUserId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rcState != null" >
+        #{rcState,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ewp.data.domain.MsgTemplate" >
+    update EWP_MSG_TEMPLATE
+    <set >
+      <if test="templateId != null" >
+        TEMPLATE_ID = #{templateId,jdbcType=VARCHAR},
+      </if>
+      <if test="templateTheme != null" >
+        TEMPLATE_THEME = #{templateTheme,jdbcType=VARCHAR},
+      </if>
+      <if test="templateContent != null" >
+        TEMPLATE_CONTENT = #{templateContent,jdbcType=VARCHAR},
+      </if>
+      <if test="templateType != null" >
+        TEMPLATE_TYPE = #{templateType,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null" >
+        CREATE_USER_ID = #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="modifyUserId != null" >
+        MODIFY_USER_ID = #{modifyUserId,jdbcType=BIGINT},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        MODIFY_DATE = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rcState != null" >
+        RC_STATE = #{rcState,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ewp.data.domain.MsgTemplate" >
+    update EWP_MSG_TEMPLATE
+    set TEMPLATE_ID = #{templateId,jdbcType=VARCHAR},
+      TEMPLATE_THEME = #{templateTheme,jdbcType=VARCHAR},
+      TEMPLATE_CONTENT = #{templateContent,jdbcType=VARCHAR},
+      TEMPLATE_TYPE = #{templateType,jdbcType=VARCHAR},
+      CREATE_USER_ID = #{createUserId,jdbcType=BIGINT},
+      MODIFY_USER_ID = #{modifyUserId,jdbcType=BIGINT},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      MODIFY_DATE = #{modifyDate,jdbcType=TIMESTAMP},
+      RC_STATE = #{rcState,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

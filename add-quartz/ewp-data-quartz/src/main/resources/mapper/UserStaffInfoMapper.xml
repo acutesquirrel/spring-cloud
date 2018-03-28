@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ewp.data.persistence.UserStaffInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.ewp.data.domain.UserStaffInfo" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="USER_ID" property="userId" jdbcType="BIGINT" />
+    <result column="STAFF_NAME" property="staffName" jdbcType="VARCHAR" />
+    <result column="STAFF_NO" property="staffNo" jdbcType="VARCHAR" />
+    <result column="STAFF_SEX" property="staffSex" jdbcType="VARCHAR" />
+    <result column="STAFF_BIRTHDAY" property="staffBirthday" jdbcType="DATE" />
+    <result column="STAFF_CARDTYPE" property="staffCardtype" jdbcType="VARCHAR" />
+    <result column="STAFF_CARDNO" property="staffCardno" jdbcType="VARCHAR" />
+    <result column="STAFF_TELPHONE" property="staffTelphone" jdbcType="VARCHAR" />
+    <result column="STAFF_EMAIL" property="staffEmail" jdbcType="VARCHAR" />
+    <result column="WORK_STATE" property="workState" jdbcType="VARCHAR" />
+    <result column="STAFF_LEVEL" property="staffLevel" jdbcType="VARCHAR" />
+    <result column="COMPANY_ID" property="companyId" jdbcType="BIGINT" />
+    <result column="WORK_STATE" property="workState" jdbcType="VARCHAR" />
+    <result column="STAFF_DEPARTMENT" property="staffDepartment" jdbcType="VARCHAR" />
+    <result column="STAFF_CATEGORY_FIR" property="staffCategoryFir" jdbcType="VARCHAR" />
+    <result column="STAFF_CATEGORY_SEC" property="staffCategorySec" jdbcType="VARCHAR" />
+    <result column="STAFF_CATEGORY_THI" property="staffCategoryThi" jdbcType="VARCHAR" />
+    <result column="CRATE_DATE" property="crateDate" jdbcType="TIMESTAMP" />
+    <result column="MODIFY_DATE" property="modifyDate" jdbcType="TIMESTAMP" />
+    <result column="CREATE_USER_ID" property="createUserId" jdbcType="BIGINT" />
+    <result column="MODIFY_USER_ID" property="modifyUserId" jdbcType="BIGINT" />
+    <result column="RC_STATE" property="rcState" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, USER_ID, STAFF_NAME, STAFF_NO, STAFF_SEX, STAFF_BIRTHDAY, STAFF_CARDTYPE, STAFF_CARDNO, 
+    STAFF_TELPHONE, STAFF_EMAIL, WORK_STATE, STAFF_LEVEL, COMPANY_ID,STAFF_DEPARTMENT,STAFF_CATEGORY_FIR, 
+    STAFF_CATEGORY_SEC,STAFF_CATEGORY_THI,CRATE_DATE, MODIFY_DATE, CREATE_USER_ID, MODIFY_USER_ID, RC_STATE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from EWP_USER_STAFF_INFO
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+  <!-- 根据companyId查询员工信息列表 start -->
+  <select id="selectAllDesc" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  	select
+  	<include refid="Base_Column_List" />
+  	from EWP_USER_STAFF_INFO 
+  	where COMPANY_ID = #{companyId,jdbcType=BIGINT} and RC_STATE = 'E'
+  </select>
+  <!-- 查询所有客户信息 -->
+  <select id="selectAllByNoParameter" resultType="com.ewp.data.domain.UserEmailRcord" parameterType="java.lang.String" >
+  	SELECT 
+  	eus.USER_ID as userID,eus.STAFF_SEX as sex,eus.STAFF_NAME as NAME,eus.STAFF_EMAIL as emailAddress 
+  	from EWP_USER_STAFF_INFO eus where eus.USER_ID NOT in (select ees.USER_ID from EWP_EMAIL_SEND ees where ees.sendstatus is NOT NULL AND ees.TASKTYPE = #{tasktype,jdbcType=VARCHAR}) ORDER BY eus.CRATE_DATE ASC LIMIT 1
+  </select> 
+  <!-- 根据companyId查询员工信息列表 end -->
+  <!-- 根据companyId查询员工信息列表 返回List集合 start -->
+  <select id="getStaffInfoByCompanyId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  	select
+  	<include refid="Base_Column_List" />
+  	from EWP_USER_STAFF_INFO 
+  	where COMPANY_ID = #{companyId,jdbcType=BIGINT} and RC_STATE = 'E'
+  </select>
+   <!-- 邮件汇报批 -->
+  <select id="selectPersonNum" resultType="String">
+    SELECT
+		count(DISTINCT e.USER_ID) 
+	FROM
+		EWP_USER_STAFF_INFO e
+	WHERE
+		DATEDIFF(e.CRATE_DATE, NOW()) BETWEEN #{yNum} AND #{tNum};
+  </select>
+  <!-- 根据companyId查询员工信息列表 end -->
+  <!-- 根据userID查询相关内容 -->
+  <select id="selectByUId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  	select 
+    <include refid="Base_Column_List" />
+    from EWP_USER_STAFF_INFO
+    where USER_ID = #{userId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from EWP_USER_STAFF_INFO
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ewp.data.domain.UserStaffInfo" >
+    insert into EWP_USER_STAFF_INFO (ID, USER_ID, STAFF_NAME, 
+      STAFF_NO, STAFF_SEX, STAFF_BIRTHDAY, 
+      STAFF_CARDTYPE, STAFF_CARDNO, STAFF_TELPHONE, 
+      STAFF_EMAIL, WORK_STATE, STAFF_LEVEL, 
+      COMPANY_ID, STAFF_DEPARTMENT,STAFF_CATEGORY_FIR,STAFF_CATEGORY_SEC,STAFF_CATEGORY_THI,CRATE_DATE, 
+      MODIFY_DATE, CREATE_USER_ID, MODIFY_USER_ID, 
+      RC_STATE)
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{staffName,jdbcType=VARCHAR}, 
+      #{staffNo,jdbcType=VARCHAR}, #{staffSex,jdbcType=VARCHAR}, #{staffBirthday,jdbcType=DATE}, 
+      #{staffCardtype,jdbcType=VARCHAR}, #{staffCardno,jdbcType=VARCHAR}, #{staffTelphone,jdbcType=VARCHAR}, 
+      #{staffEmail,jdbcType=VARCHAR}, #{workState,jdbcType=VARCHAR}, #{staffLevel,jdbcType=VARCHAR}, 
+      #{companyId,jdbcType=BIGINT},#{staffDepartment,jdbcType=VARCHAR}, #{staffCategoryFir,jdbcType=VARCHAR},#{staffCategorySec,jdbcType=VARCHAR},#{staffCategoryThi,jdbcType=VARCHAR}, #{crateDate,jdbcType=TIMESTAMP}, 
+      #{modifyDate,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=BIGINT}, #{modifyUserId,jdbcType=BIGINT}, 
+      #{rcState,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ewp.data.domain.UserStaffInfo" >
+    insert into EWP_USER_STAFF_INFO
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+      <if test="staffName != null" >
+        STAFF_NAME,
+      </if>
+      <if test="staffNo != null" >
+        STAFF_NO,
+      </if>
+      <if test="staffSex != null" >
+        STAFF_SEX,
+      </if>
+      <if test="staffBirthday != null" >
+        STAFF_BIRTHDAY,
+      </if>
+      <if test="staffCardtype != null" >
+        STAFF_CARDTYPE,
+      </if>
+      <if test="staffCardno != null" >
+        STAFF_CARDNO,
+      </if>
+      <if test="staffTelphone != null" >
+        STAFF_TELPHONE,
+      </if>
+      <if test="staffEmail != null" >
+        STAFF_EMAIL,
+      </if>
+      <if test="workState != null" >
+        WORK_STATE,
+      </if>
+      <if test="staffLevel != null" >
+        STAFF_LEVEL,
+      </if>
+      <if test="companyId != null" >
+        COMPANY_ID,
+      </if>
+      <if test="staffDepartment != null" >
+        STAFF_DEPARTMENT,
+      </if>
+      <if test="staffCategoryFir != null" >
+        STAFF_CATEGORY_FIR,
+      </if>
+      <if test="staffCategorySec != null" >
+        STAFF_CATEGORY_SEC,
+      </if>
+      <if test="staffCategoryThi != null" >
+        STAFF_CATEGORY_THI,
+      </if>
+      <!-- <if test="crateDate != null" >
+        CRATE_DATE,
+      </if> -->
+       
+        CRATE_DATE,
+      
+      <!-- <if test="modifyDate != null" >
+        MODIFY_DATE,
+      </if> -->
+      	MODIFY_DATE,
+      <if test="createUserId != null" >
+        CREATE_USER_ID,
+      </if>
+      <if test="modifyUserId != null" >
+        MODIFY_USER_ID,
+      </if>
+      <if test="rcState != null" >
+        RC_STATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="staffName != null" >
+        #{staffName,jdbcType=VARCHAR},
+      </if>
+      <if test="staffNo != null" >
+        #{staffNo,jdbcType=VARCHAR},
+      </if>
+      <if test="staffSex != null" >
+        #{staffSex,jdbcType=VARCHAR},
+      </if>
+      <if test="staffBirthday != null" >
+        #{staffBirthday,jdbcType=DATE},
+      </if>
+      <if test="staffCardtype != null" >
+        #{staffCardtype,jdbcType=VARCHAR},
+      </if>
+      <if test="staffCardno != null" >
+        #{staffCardno,jdbcType=VARCHAR},
+      </if>
+      <if test="staffTelphone != null" >
+        #{staffTelphone,jdbcType=VARCHAR},
+      </if>
+      <if test="staffEmail != null" >
+        #{staffEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="workState != null" >
+        #{workState,jdbcType=VARCHAR},
+      </if>
+      <if test="staffLevel != null" >
+        #{staffLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null" >
+        #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="staffDepartment != null" >
+        #{staffDepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="staffCategoryFir != null" >
+        #{staffCategoryFir,jdbcType=VARCHAR},
+      </if>
+      <if test="staffCategorySec != null" >
+        #{staffCategorySec,jdbcType=VARCHAR},
+      </if>
+      <if test="staffCategoryThi != null" >
+        #{staffCategoryThi,jdbcType=VARCHAR},
+      </if>
+      <!-- <if test="crateDate != null" >
+        #{crateDate,jdbcType=TIMESTAMP},
+      </if> -->
+      	now(),
+     <!--  <if test="modifyDate != null" >
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if> -->
+      	now(),
+      <if test="createUserId != null" >
+        #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="modifyUserId != null" >
+        #{modifyUserId,jdbcType=BIGINT},
+      </if>
+      <if test="rcState != null" >
+        #{rcState,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ewp.data.domain.UserStaffInfo" >
+    update EWP_USER_STAFF_INFO
+    <set >
+      <if test="userId != null" >
+        USER_ID = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="staffName != null" >
+        STAFF_NAME = #{staffName,jdbcType=VARCHAR},
+      </if>
+      <if test="staffNo != null" >
+        STAFF_NO = #{staffNo,jdbcType=VARCHAR},
+      </if>
+      <if test="staffSex != null" >
+        STAFF_SEX = #{staffSex,jdbcType=VARCHAR},
+      </if>
+      <if test="staffBirthday != null" >
+        STAFF_BIRTHDAY = #{staffBirthday,jdbcType=DATE},
+      </if>
+      <if test="staffCardtype != null" >
+        STAFF_CARDTYPE = #{staffCardtype,jdbcType=VARCHAR},
+      </if>
+      <if test="staffCardno != null" >
+        STAFF_CARDNO = #{staffCardno,jdbcType=VARCHAR},
+      </if>
+      <if test="staffTelphone != null" >
+        STAFF_TELPHONE = #{staffTelphone,jdbcType=VARCHAR},
+      </if>
+      <if test="staffEmail != null" >
+        STAFF_EMAIL = #{staffEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="workState != null" >
+        WORK_STATE = #{workState,jdbcType=VARCHAR},
+      </if>
+      <if test="staffLevel != null" >
+        STAFF_LEVEL = #{staffLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="companyId != null" >
+        COMPANY_ID = #{companyId,jdbcType=BIGINT},
+      </if>
+      <if test="staffDepartment != null" >
+        STAFF_DEPARTMENT = #{staffDepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="staffCategoryFir != null" >
+        STAFF_CATEGORY_FIR = #{staffCategoryFir,jdbcType=VARCHAR},
+      </if>
+      <if test="staffCategorySec != null" >
+        STAFF_CATEGORY_SEC = #{staffCategorySec,jdbcType=VARCHAR},
+      </if>
+      <if test="staffCategoryThi != null" >
+        STAFF_CATEGORY_THI = #{staffCategoryThi,jdbcType=VARCHAR},
+      </if>
+      <if test="crateDate != null" >
+        CRATE_DATE = #{crateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        MODIFY_DATE = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null" >
+        CREATE_USER_ID = #{createUserId,jdbcType=BIGINT},
+      </if>
+      <if test="modifyUserId != null" >
+        MODIFY_USER_ID = #{modifyUserId,jdbcType=BIGINT},
+      </if>
+      <if test="rcState != null" >
+        RC_STATE = #{rcState,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ewp.data.domain.UserStaffInfo" >
+    update EWP_USER_STAFF_INFO
+    set USER_ID = #{userId,jdbcType=BIGINT},
+      STAFF_NAME = #{staffName,jdbcType=VARCHAR},
+      STAFF_NO = #{staffNo,jdbcType=VARCHAR},
+      STAFF_SEX = #{staffSex,jdbcType=VARCHAR},
+      STAFF_BIRTHDAY = #{staffBirthday,jdbcType=DATE},
+      STAFF_CARDTYPE = #{staffCardtype,jdbcType=VARCHAR},
+      STAFF_CARDNO = #{staffCardno,jdbcType=VARCHAR},
+      STAFF_TELPHONE = #{staffTelphone,jdbcType=VARCHAR},
+      STAFF_EMAIL = #{staffEmail,jdbcType=VARCHAR},
+      WORK_STATE = #{workState,jdbcType=VARCHAR},
+      STAFF_LEVEL = #{staffLevel,jdbcType=VARCHAR},
+      COMPANY_ID = #{companyId,jdbcType=BIGINT},
+      STAFF_DEPARTMENT = #{staffDepartment,jdbcType=VARCHAR},
+      STAFF_CATEGORY_FIR = #{staffCategoryFir,jdbcType=VARCHAR},
+      STAFF_CATEGORY_SEC = #{staffCategorySec,jdbcType=VARCHAR},
+      STAFF_CATEGORY_THI = #{staffCategoryThi,jdbcType=VARCHAR},
+      CRATE_DATE = #{crateDate,jdbcType=TIMESTAMP},
+      MODIFY_DATE = #{modifyDate,jdbcType=TIMESTAMP},
+      CREATE_USER_ID = #{createUserId,jdbcType=BIGINT},
+      MODIFY_USER_ID = #{modifyUserId,jdbcType=BIGINT},
+      RC_STATE = #{rcState,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <!-- 逻辑删除sql -->
+	<!-- <update id="deleteInfoById"	>
+	    update EWP_USER_STAFF_INFO 
+	    set  RC_STATE = 'D'
+	    where ID in
+	    <foreach collection="idArray" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+	</update> -->
+	
+	<delete id="deleteInfoById">
+        delete from EWP_USER_STAFF_INFO where ID in
+        <foreach collection="idArray" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+	
+	<!-- 获取id集合用于级联删除 用户表信息-->
+	<select id="getUserIdForDel" resultType="java.lang.Long">
+		select USER_ID from EWP_USER_STAFF_INFO
+		where ID in
+		<foreach collection="idArray" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+	</select>
+	
+	<!-- 根据userId查询员工信息列表 start -->
+  <select id="selectUserIdRce" resultMap="BaseResultMap" parameterType="java.lang.Long">
+  	select
+  	<include refid="Base_Column_List" />
+  	from EWP_USER_STAFF_INFO 
+  	where USER_ID = #{userId,jdbcType=BIGINT} and RC_STATE = 'E'
+  </select>
+  <!-- 根据userId查询员工信息列表 end -->
+  
+   <!-- 根据userId更新企业员工信息  start-->
+  <update id="updateByUserIdSelective" parameterType="com.ewp.data.domain.UserStaffInfoRce" >
+    update EWP_USER_STAFF_INFO
+    <set >
+      <if test="userId != null" >
+        USER_ID = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="staffName != null" >
+        STAFF_NAME = #{staffName,jdbcType=VARCHAR},
+      </if>
+      <if test="staffSex != null" >
+        STAFF_SEX = #{staffSex,jdbcType=VARCHAR},
+      </if>
+      <if test="staffBirthday != null" >
+        STAFF_BIRTHDAY = #{staffBirthday,jdbcType=DATE},
+      </if>
+      <if test="staffCardtype != null" >
+        STAFF_CARDTYPE = #{staffCardtype,jdbcType=VARCHAR},
+      </if>
+      <if test="staffCardno != null" >
+        STAFF_CARDNO = #{staffCardno,jdbcType=VARCHAR},
+      </if>
+      <if test="staffEmail != null" >
+        STAFF_EMAIL = #{staffEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="workState != null" >
+        WORK_STATE = #{workState,jdbcType=VARCHAR},
+      </if>
+      <if test="staffLevel != null" >
+        STAFF_LEVEL = #{staffLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="staffDepartment != null" >
+        STAFF_DEPARTMENT = #{staffDepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="staffCategoryFir != null" >
+        STAFF_CATEGORY_FIR = #{staffCategoryFir,jdbcType=VARCHAR},
+      </if>
+      <if test="staffCategorySec != null" >
+        STAFF_CATEGORY_SEC = #{staffCategorySec,jdbcType=VARCHAR},
+      </if>
+      <if test="staffCategoryThi != null" >
+        STAFF_CATEGORY_THI = #{staffCategoryThi,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <!-- 根据userId更新企业员工信息  end-->
+  
+   <!-- 根据userId更新企业员工邮箱信息  start-->
+  <update id="updateByUserIdEmail" parameterType="com.ewp.data.domain.UserStaffInfoRce" >
+    update EWP_USER_STAFF_INFO
+    <set >
+      <if test="id != null" >
+        ID = #{id,jdbcType=BIGINT},
+      </if>
+      <if test="staffName != null" >
+        STAFF_NAME = #{staffName,jdbcType=VARCHAR},
+      </if>
+      <if test="staffSex != null" >
+        STAFF_SEX = #{staffSex,jdbcType=VARCHAR},
+      </if>
+      <if test="staffBirthday != null" >
+        STAFF_BIRTHDAY = #{staffBirthday,jdbcType=DATE},
+      </if>
+      <if test="staffCardtype != null" >
+        STAFF_CARDTYPE = #{staffCardtype,jdbcType=VARCHAR},
+      </if>
+      <if test="staffCardno != null" >
+        STAFF_CARDNO = #{staffCardno,jdbcType=VARCHAR},
+      </if>
+      <if test="staffEmail != null" >
+        STAFF_EMAIL = #{staffEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="workState != null" >
+        WORK_STATE = #{workState,jdbcType=VARCHAR},
+      </if>
+      <if test="staffLevel != null" >
+        STAFF_LEVEL = #{staffLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="staffDepartment != null" >
+        STAFF_DEPARTMENT = #{staffDepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="staffCategoryFir != null" >
+        STAFF_CATEGORY_FIR = #{staffCategoryFir,jdbcType=VARCHAR},
+      </if>
+      <if test="staffCategorySec != null" >
+        STAFF_CATEGORY_SEC = #{staffCategorySec,jdbcType=VARCHAR},
+      </if>
+      <if test="staffCategoryThi != null" >
+        STAFF_CATEGORY_THI = #{staffCategoryThi,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where USER_ID = #{userId,jdbcType=BIGINT}
+  </update>
+  <!-- 根据userId更新企业员工邮箱信息  end-->
+</mapper>

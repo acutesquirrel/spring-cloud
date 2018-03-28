@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ewp.data.persistence.SendmsgRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.ewp.data.domain.SendmsgRecord" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="USER_ID" property="userId" jdbcType="BIGINT" />
+    <result column="USER_PWD" property="userPwd" jdbcType="VARCHAR" />
+    <result column="TEMPLATE_ID" property="templateId" jdbcType="VARCHAR" />
+    <result column="SEND_STATE" property="sendState" jdbcType="VARCHAR" />
+    <result column="FAIL_REASON" property="failReason" jdbcType="VARCHAR" />
+    <result column="MSG_CONTENT" property="msgContent" jdbcType="VARCHAR" />
+    <result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="MODIFY_DATE" property="modifyDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, USER_ID, USER_PWD, TEMPLATE_ID, SEND_STATE, FAIL_REASON, MSG_CONTENT, CREATE_DATE, 
+    MODIFY_DATE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from EWP_SENDMSG_RECORD
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+   <!-- 查询某某状态所有待发送短信-->
+	<select id="selectToSendMsgPerson" resultType="com.ewp.data.model.response.ToSendMsgPerson">
+		SELECT
+			esr.ID AS Id,
+			esr.USER_ID AS userId,
+			eusi.STAFF_NAME AS userName,
+			eusi.STAFF_SEX AS userSex,
+			eusi.STAFF_TELPHONE AS phoneNumber,
+			esr.USER_PWD AS pwd,
+			esr.TEMPLATE_ID AS templateId 
+		FROM
+			EWP_SENDMSG_RECORD esr
+		JOIN
+			EWP_USER_STAFF_INFO eusi
+		ON
+			esr.USER_ID = eusi.USER_ID
+		WHERE esr.SEND_STATE = #{sendState} ORDER BY esr.ID LIMIT #{count}
+	</select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from EWP_SENDMSG_RECORD
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ewp.data.domain.SendmsgRecord" >
+    insert into EWP_SENDMSG_RECORD (ID, USER_ID, USER_PWD, 
+      TEMPLATE_ID, SEND_STATE, FAIL_REASON, 
+      MSG_CONTENT, CREATE_DATE, MODIFY_DATE
+      )
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{userPwd,jdbcType=VARCHAR}, 
+      #{templateId,jdbcType=VARCHAR}, #{sendState,jdbcType=VARCHAR}, #{failReason,jdbcType=VARCHAR}, 
+      #{msgContent,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ewp.data.domain.SendmsgRecord" >
+    insert into EWP_SENDMSG_RECORD
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+      <if test="userPwd != null" >
+        USER_PWD,
+      </if>
+      <if test="templateId != null" >
+        TEMPLATE_ID,
+      </if>
+      <if test="sendState != null" >
+        SEND_STATE,
+      </if>
+      <if test="failReason != null" >
+        FAIL_REASON,
+      </if>
+      <if test="msgContent != null" >
+        MSG_CONTENT,
+      </if>
+      <!-- <if test="createDate != null" >
+        CREATE_DATE,
+      </if> -->
+      	CREATE_DATE,
+      <if test="modifyDate != null" >
+        MODIFY_DATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="userPwd != null" >
+        #{userPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="templateId != null" >
+        #{templateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sendState != null" >
+        #{sendState,jdbcType=VARCHAR},
+      </if>
+      <if test="failReason != null" >
+        #{failReason,jdbcType=VARCHAR},
+      </if>
+      <if test="msgContent != null" >
+        #{msgContent,jdbcType=VARCHAR},
+      </if>
+      <!-- <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if> -->
+      		now(),
+      <if test="modifyDate != null" >
+        #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ewp.data.domain.SendmsgRecord" >
+    update EWP_SENDMSG_RECORD
+    <set >
+      <if test="userId != null" >
+        USER_ID = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="userPwd != null" >
+        USER_PWD = #{userPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="templateId != null" >
+        TEMPLATE_ID = #{templateId,jdbcType=VARCHAR},
+      </if>
+      <if test="sendState != null" >
+        SEND_STATE = #{sendState,jdbcType=VARCHAR},
+      </if>
+      <if test="failReason != null" >
+        FAIL_REASON = #{failReason,jdbcType=VARCHAR},
+      </if>
+      <if test="msgContent != null" >
+        MSG_CONTENT = #{msgContent,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyDate != null" >
+        MODIFY_DATE = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ewp.data.domain.SendmsgRecord" >
+    update EWP_SENDMSG_RECORD
+    set USER_ID = #{userId,jdbcType=BIGINT},
+      USER_PWD = #{userPwd,jdbcType=VARCHAR},
+      TEMPLATE_ID = #{templateId,jdbcType=VARCHAR},
+      SEND_STATE = #{sendState,jdbcType=VARCHAR},
+      FAIL_REASON = #{failReason,jdbcType=VARCHAR},
+      MSG_CONTENT = #{msgContent,jdbcType=VARCHAR},
+      CREATE_DATE = #{createDate,jdbcType=TIMESTAMP},
+      MODIFY_DATE = #{modifyDate,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

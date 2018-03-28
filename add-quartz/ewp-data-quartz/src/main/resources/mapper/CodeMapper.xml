@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ewp.data.persistence.CodeMapper" >
+  <resultMap id="BaseResultMap" type="com.ewp.data.domain.Code" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="CODE_NAME" property="codeName" jdbcType="VARCHAR" />
+    <result column="CODE_TYPE" property="codeType" jdbcType="VARCHAR" />
+    <result column="CODE_VALUE" property="codeValue" jdbcType="VARCHAR" />
+    <result column="CODE_POSITION" property="codePosition" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, CODE_NAME, CODE_TYPE, CODE_VALUE, CODE_POSITION
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from EWP_CODE
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <!-- 根据机构代码号查询机构信息  start-->
+	  <select id="selectCompanyCodeType" resultMap="BaseResultMap" parameterType="java.lang.String">
+	  	select
+	  	<include refid="Base_Column_List" />
+	  	from EWP_CODE
+	  	where CODE_TYPE = #{companyCodeType,jdbcType=VARCHAR}
+	  </select>
+	  
+  <!-- 根据码表类型和值查询码表名称 -->
+  <select id="selectCodeName" resultType="string" parameterType="java.lang.String">
+    select 
+    CODE_NAME
+    from EWP_CODE
+    where
+    CODE_TYPE = #{codeType,jdbcType=VARCHAR} and CODE_VALUE = #{codeValue,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 根据码表类型和值查询码表名称 -->
+  <select id="getCodeName" resultType="string" parameterType="java.lang.String">
+    select 
+    CODE_NAME
+    from EWP_CODE
+    where
+    CODE_TYPE = #{codeType,jdbcType=VARCHAR} and CODE_VALUE = #{codeValue,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 根据码表类型和值查询码表名称 -->
+  <select id="getCompanyCode" resultType="string" parameterType="java.lang.String">
+    select 
+    <include refid="Base_Column_List" />
+    from EWP_CODE
+    where
+    CODE_TYPE = #{codeType} and CODE_VALUE = #{codeValue}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from EWP_CODE
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ewp.data.domain.Code" >
+    insert into EWP_CODE (ID, CODE_NAME, CODE_TYPE, 
+      CODE_VALUE, CODE_POSITION)
+    values (#{id,jdbcType=BIGINT}, #{codeName,jdbcType=VARCHAR}, #{codeType,jdbcType=VARCHAR}, 
+      #{codeValue,jdbcType=VARCHAR}, #{codePosition,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ewp.data.domain.Code" >
+    insert into EWP_CODE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="codeName != null" >
+        CODE_NAME,
+      </if>
+      <if test="codeType != null" >
+        CODE_TYPE,
+      </if>
+      <if test="codeValue != null" >
+        CODE_VALUE,
+      </if>
+      <if test="codePosition != null" >
+        CODE_POSITION,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="codeName != null" >
+        #{codeName,jdbcType=VARCHAR},
+      </if>
+      <if test="codeType != null" >
+        #{codeType,jdbcType=VARCHAR},
+      </if>
+      <if test="codeValue != null" >
+        #{codeValue,jdbcType=VARCHAR},
+      </if>
+      <if test="codePosition != null" >
+        #{codePosition,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ewp.data.domain.Code" >
+    update EWP_CODE
+    <set >
+      <if test="codeName != null" >
+        CODE_NAME = #{codeName,jdbcType=VARCHAR},
+      </if>
+      <if test="codeType != null" >
+        CODE_TYPE = #{codeType,jdbcType=VARCHAR},
+      </if>
+      <if test="codeValue != null" >
+        CODE_VALUE = #{codeValue,jdbcType=VARCHAR},
+      </if>
+      <if test="codePosition != null" >
+        CODE_POSITION = #{codePosition,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ewp.data.domain.Code" >
+    update EWP_CODE
+    set CODE_NAME = #{codeName,jdbcType=VARCHAR},
+      CODE_TYPE = #{codeType,jdbcType=VARCHAR},
+      CODE_VALUE = #{codeValue,jdbcType=VARCHAR},
+      CODE_POSITION = #{codePosition,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
